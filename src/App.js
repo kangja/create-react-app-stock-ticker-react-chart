@@ -1,39 +1,26 @@
-import { useEffect } from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { useEffect, useState } from "react";
 
 const proxyUrl = "https://secret-ocean-49799.herokuapp.com/";
 const stocksUrl = `${proxyUrl}https://query1.finance.yahoo.com/v8/finance/chart/GME`;
+
 async function getStocks() {
   const response = await fetch(stocksUrl);
+
   return response.json();
 }
 
 function App() {
+  const [price, setPrice] = useState(-1);
+
   useEffect(() => {
     getStocks().then((data) => {
-      console.log(data);
+      const gme = data.chart.result[0];
+      console.log(gme);
+      setPrice(gme.meta.regularMarketPrice);
     });
   }, []);
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  return <div className="price">{price}</div>;
 }
 
 export default App;
