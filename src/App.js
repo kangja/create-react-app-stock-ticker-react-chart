@@ -11,16 +11,33 @@ async function getStocks() {
 
 function App() {
   const [price, setPrice] = useState(-1);
+  const [priceTime, setPriceTime] = useState(null);
 
   useEffect(() => {
-    getStocks().then((data) => {
+    let timeoutId;
+    async function getLatestPrice() {
+      const data = await getStocks();
       const gme = data.chart.result[0];
-      console.log(gme);
-      setPrice(gme.meta.regularMarketPrice);
-    });
+      setPrice("$" + gme.meta.regularMarketPrice.toFixed(2));
+      setPriceTime(new Date(gme.meta.regularMarketTime * 1000));
+      timeoutId = setTimeout(getLatestPrice, 5000);
+    }
+
+    timeoutId = setTimeout(getLatestPrice, 5000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, []);
 
-  return <div className="price">{price}</div>;
+  return (
+    <div>
+      <div className="price">{price}</div>
+      <div className="price-time">
+        {priceTime && priceTime.toLocaleTimeString()}
+      </div>
+    </div>
+  );
 }
 
 export default App;
