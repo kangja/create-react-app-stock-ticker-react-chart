@@ -7,10 +7,25 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.ticker {
+  font-size: 15vmin;
+  text-align: center;
+}
+
 .price {
   font-size: 20vmin;
+  text-align: center;
 }
 
 .price-time {
   font-size: 10vmin;
+  text-align: center;
+}
+
+.up {
+  color: #34a853;
+}
+
+.down {
+  color: #d93025;
 }
