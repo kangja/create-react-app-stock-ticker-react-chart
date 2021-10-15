@@ -8,12 +8,12 @@ body {
 }
 
 .ticker {
-  font-size: 15vmin;
+  font-size: 12vmin;
   text-align: center;
 }
 
 .price {
-  font-size: 20vmin;
+  font-size: 16vmin;
   text-align: center;
 }
 

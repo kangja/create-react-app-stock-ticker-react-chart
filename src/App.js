@@ -6,7 +6,6 @@ const proxyUrl = "https://secret-ocean-49799.herokuapp.com/";
 const stocksUrl = `${proxyUrl}https://query1.finance.yahoo.com/v8/finance/chart/GME`;
 async function getStocks() {
   const response = await fetch(stocksUrl);
-
   return response.json();
 }
 
@@ -37,6 +36,10 @@ const chart = {
   },
 };
 
+const round = (number) => {
+  return number ? +number.toFixed(2) : null;
+};
+
 function App() {
   const [series, setSeries] = useState([
     {
@@ -57,16 +60,27 @@ function App() {
         setPrevPrice(price);
         setPrice(gme.meta.regularMarketPrice.toFixed(2));
         setPriceTime(new Date(gme.meta.regularMarketTime * 1000));
-        const prices = gme.chart.timestamps((timestamp) => ({
+        const quote = gme.indicators.quote[0];
+        const prices = gme.timestamp.map((timestamp, index) => ({
           x: new Date(timestamp * 1000),
-          y: [],
+          y: [
+            quote.open[index],
+            quote.high[index],
+            quote.low[index],
+            quote.close[index],
+          ].map(round),
         }));
+        setSeries([
+          {
+            data: prices,
+          },
+        ]);
       } catch (error) {
         console.log(error);
       }
+      timeoutId = setTimeout(getLatestPrice, 5000 * 2);
     }
 
-    // timeoutId = setTimeout(getLatestPrice, 5000);
     getLatestPrice();
 
     return () => {
